@@ -121,3 +121,18 @@ function pjImg(i){var el=document.getElementById("projm");el.querySelector(".cer
   [].forEach.call(document.querySelectorAll(".proj,.hl"),function(c){c.addEventListener("pointermove",function(e){var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform="perspective(900px) rotateY("+(x*9).toFixed(2)+"deg) rotateX("+(-y*9).toFixed(2)+"deg) translateY(-4px)";});c.addEventListener("pointerleave",function(){c.style.transform=""});});
  }
 })();
+
+/* v10 index */
+function buildIndex(){var B=document.getElementById("ixBody");if(!B||B.dataset.done)return;var h="",n=0,docs=0,seen={};
+ S.forEach(function(s){h+='<section class="ixsec"><h3><span class="ixnum">'+s[0]+'</span>'+esc(s[1])+'</h3>';
+  s[3].forEach(function(b){h+='<div class="ixgrp"><h4 class="ixbr">'+esc(b[0])+'</h4><table class="ixt"><tbody>';
+   b[1].forEach(function(it){var ex=it[3]||{},lv=ex.lv||"sch";it[2].forEach(function(e,i){n++;var k=e[2],x=k&&EV[k],md="",lab="—";
+     if(ex.rec){md="rec";lab="Open"}else if(e[3]){md="pop";k=e[3];lab="Read"}else if(ex.pop){md="pop";k=ex.pop;lab="Summary"}else if(x&&x.i.length){md="ev";lab="View";if(!seen[k]){seen[k]=1;docs+=x.i.length;}}else if(x){md="evs";lab="Summary"}
+     h+='<tr data-s="'+esc((it[0]+" "+e[0]+" "+e[1]+" "+b[0]+" "+s[1]).toLowerCase())+'"><td class="ixn">'+(i===0?esc(it[0]):'<span class="ixc">'+esc(it[0])+'</span>')+'</td><td class="ixy">'+esc(e[0])+'</td><td class="ixr">'+esc(e[1])+'</td><td class="ixl">'+(lv==="intl"?'<span class="lvtag intl">International</span>':lv==="nat"?'<span class="lvtag nat">National</span>':'')+'</td><td class="ixa">'+(md?'<button type="button" class="ixb" data-ix="'+esc(k)+'" data-md="'+md+'" data-y="'+esc(e[0])+'">'+lab+'</button>':'<span class="ixd">—</span>')+'</td></tr>';});});
+   h+='</tbody></table></div>';});h+='</section>';});
+ B.innerHTML=h;B.dataset.done="1";document.getElementById("ixSub").textContent=n+" entries across "+S.length+" sections, with "+docs+" attached documents. Select View to open any document.";}
+document.addEventListener("click",function(e){var t=e.target.closest("[data-index],[data-ix]");if(!t)return;e.preventDefault();
+ if(t.hasAttribute("data-index")){buildIndex();openScreen(document.getElementById("indexs"));var q=document.getElementById("ixq");if(q)q.focus();return;}
+ var k=t.getAttribute("data-ix"),md=t.getAttribute("data-md");
+ if(md==="ev")openKey(k,t.getAttribute("data-y")||"");else if(md==="evs")showSummary(k);else if(md==="pop"){var p=P[k];if(p)showPopObj(p);}else if(md==="rec")openScreen(document.getElementById("record"));});
+(function(){var q=document.getElementById("ixq");if(!q)return;q.addEventListener("input",function(){var s=q.value.trim().toLowerCase();[].forEach.call(document.querySelectorAll("#ixBody tr"),function(r){r.hidden=!!s&&r.getAttribute("data-s").indexOf(s)<0});[].forEach.call(document.querySelectorAll("#ixBody .ixgrp"),function(g){g.hidden=![].some.call(g.querySelectorAll("tr"),function(r){return !r.hidden})});[].forEach.call(document.querySelectorAll("#ixBody .ixsec"),function(c){c.hidden=![].some.call(c.querySelectorAll(".ixgrp"),function(g){return !g.hidden})});});})();
